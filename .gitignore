@@ -1,0 +1,31 @@
+# Simulation / Verilog files
+*.vcd
+*.vpd
+*.fsdb
+*.fst
+simv*
+csrc/
+*.daidir
+INCA_libs/
+work/
+xcelium.d/
+*.log
+*.key
+
+# Editor Backup files
+*.swp
+*~
+*.tmp
+
+# AI / Custom Configuration
+.agent/
+.claude/
+.knowns/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.mcp.json
+
+# OS files
+.DS_Store
+Thumbs.db
