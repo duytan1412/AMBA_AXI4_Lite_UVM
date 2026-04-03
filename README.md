@@ -63,6 +63,14 @@ assert property (p_awvalid_stable)
 
 ---
 
+## 📊 Simulation Evidence (Vivado Waveform)
+
+The waveform below demonstrates a standard **AXI4-Lite Write Transaction** (Address + Data) with a successful **Handshake** (`VALID` and `READY` asserted on the same clock edge).
+
+![AXI4-Lite Handshake](./docs/axi_handshake.png)
+
+---
+
 ## 📈 Sample Simulation Output (Cadence Xcelium)
 
 ```text
