@@ -39,7 +39,7 @@ interface axi4_lite_if #(
 
     //---------------------------------------------------------
     // SYSTEMVERILOG ASSERTIONS (SVA)
-    // Professional verification code included for JD alignment
+    // Protocol Compliance Checkers
     //---------------------------------------------------------
 
     property p_awvalid_stable;

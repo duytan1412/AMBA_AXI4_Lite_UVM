@@ -17,7 +17,7 @@ module axi4_lite_simple_tb();
     wire        bvalid;
     reg         bready;
 
-    // Simplified Master Logic for Waveform
+    // Master-side registers for stimulus generation
     reg [4:0]  r_awaddr;
     reg        r_awvalid;
     reg [31:0] r_wdata;
@@ -56,28 +56,28 @@ module axi4_lite_simple_tb();
     always #5 clk = ~clk;
 
     initial begin
-        // Reset
+        // Async Reset
         rst_n = 0;
         r_awvalid = 0;
         r_wvalid = 0;
         bready = 1;
         #20 rst_n = 1;
 
-        // --- MÔ PHỎNG HANDSHAKE CHO BẠN CHỤP HÌNH ---
+        // --- Basic Write Handshake Simulation ---
         #10;
         r_awaddr = 5'h04;
-        r_awvalid = 1;      // Master gửi địa chỉ
+        r_awvalid = 1;      // Drive address
         r_wdata = 32'hAAAA_BBBB;
-        r_wvalid = 1;      // Master gửi data
+        r_wvalid = 1;      // Drive data
         
-        // Chờ Slave bắt tay (READY)
+        // Wait for Slave READY handshake
         wait(awready && wready);
         @(posedge clk);
         r_awvalid = 0;
         r_wvalid = 0;
 
         #50;
-        $display("Captured AXI Handshake! Post this screenshot in README.");
+        $display("Simulation Done: AXI Handshake successful.");
         $finish;
     end
 
