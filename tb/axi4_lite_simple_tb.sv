@@ -3,7 +3,7 @@
 module axi4_lite_simple_tb();
 
     reg clk;
-    reg rst_n;
+    reg aresetn;
 
     // AXI signals
     wire [4:0]  awaddr;
@@ -47,7 +47,7 @@ module axi4_lite_simple_tb();
     // Instantiate DUT
     axi4_lite_slave dut (
         .aclk(clk),
-        .aresetn(rst_n),
+        .aresetn(aresetn),
         .s_axi_awaddr(awaddr),
         .s_axi_awprot(3'b000),
         .s_axi_awvalid(awvalid),
@@ -84,13 +84,13 @@ module axi4_lite_simple_tb();
     initial begin
         $display("[@ %t] [INFO] Starting AXI4-Lite Slave Verification...", $time);
         // Async Reset
-        rst_n = 0;
+        aresetn = 0;
         r_awvalid = 0;
         r_wvalid = 0;
         r_arvalid = 0;
         r_rready = 1;
         bready = 1;
-        #20 rst_n = 1;
+        #20 aresetn = 1;
         $display("[@ %t] [INFO] Reset Released.", $time);
 
         // --- TC_01: Single Word Write ---

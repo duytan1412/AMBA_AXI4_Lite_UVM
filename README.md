@@ -6,15 +6,15 @@ A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog. T
 
 ```text
 ├── rtl/
-│   └── axi4_lite_slave.sv   # AXI4-Lite Slave Logic (Async Reset)
+│   └── axi4_lite_slave.sv      # AXI4-Lite Slave Logic (Async Reset)
 ├── tb/
-│   ├── axi4_lite_simple_tb.sv # Main Testbench (Directed Stimulus)
-│   └── uvm/
-│       └── axi4_lite_if.sv    # Interface with ABV/SVA
+│   ├── axi4_lite_simple_tb.sv    # Main Testbench (Directed Stimulus)
+│   └── if/                       # Interface & ABV Layer
+│       └── axi4_lite_if.sv       # Interface with SVA Protocol Checkers
 ├── docs/
-│   └── waveform_annotated.png # Final annotated simulation results
-├── Makefile                   # Icarus Verilog build & sim flow
-└── README.md                  # Project documentation
+│   └── waveform_annotated.png    # Annotated simulation results
+├── Makefile                      # Icarus Verilog build & sim flow
+└── README.md                     # Project documentation
 ```
 
 ## Technical Specifications
@@ -29,14 +29,14 @@ The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 
 
 | Category | Feature | Status |
 | :--- | :--- | :--- |
-| **Protocol** | AXI4-Lite Compliance | ✅ Fully Implemented |
-| | Handshake Stability (VALID/READY) | ✅ Verified via ABV |
-| | Response Handling (BRESP/RRESP) | ✅ OKAY (00) |
+| **Protocol** | AXI4-Lite Standard | ✅ Core features implemented & verified |
+| | Handshake Stability | ✅ Verified via ABV (VALID/READY) |
+| | Response Handling | ✅ OKAY (00) for BRESP/RRESP |
 | **Logic** | Address Decoding | ✅ 5-bit Sub-addressing |
 | | Register Read/Write | ✅ 4 x 32-bit Registers |
-| | Asynchronous Reset | ✅ Active-Low Implementation |
-| **Verification** | Directed Testbench | ✅ 3 Detailed Testcases |
-| | Assertion-Based (ABV) | ✅ Basic (SVA included) |
+| | Asynchronous Reset | ✅ `aresetn` (Active-Low) |
+| **Verification** | Methodology | ✅ 3 directed verification scenarios |
+| | Assertion-Based (ABV) | ✅ Basic SVA Protocol Checkers |
 | | Simulation Logging | ✅ Timestamped (ns) |
 
 ## Verification (ABV & Directed TB)

@@ -7,7 +7,7 @@ VVP = vvp
 
 # Sources
 RTL_SRC = rtl/axi4_lite_slave.sv
-TB_IF  = tb/uvm/axi4_lite_if.sv
+TB_IF  = tb/if/axi4_lite_if.sv
 TB_TOP = tb/axi4_lite_simple_tb.sv
 
 OUT = axi_sim.vvp
