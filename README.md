@@ -2,6 +2,21 @@
 
 A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog. This project demonstrates **Assertion-Based Verification (ABV)** for interface integrity and functional correctness.
 
+## Project Structure
+
+```text
+├── rtl/
+│   └── axi4_lite_slave.sv   # AXI4-Lite Slave Logic (Async Reset)
+├── tb/
+│   ├── axi4_lite_simple_tb.sv # Main Testbench (Directed Stimulus)
+│   └── uvm/
+│       └── axi4_lite_if.sv    # Interface with ABV/SVA
+├── docs/
+│   └── waveform_annotated.png # Final annotated simulation results
+├── Makefile                   # Icarus Verilog build & sim flow
+└── README.md                  # Project documentation
+```
+
 ## Technical Specifications
 
 The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 5-channel handshake:
@@ -9,6 +24,20 @@ The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 
 - **Write Path**: Supports `AW` (Address) and `W` (Data) phases with `WSTRB` (byte-enable) logic.
 - **Read Path**: Independent `AR` (Address) and `R` (Data/Status) synchronization.
 - **Handshake Logic**: Fully compliant with AXI4 stability rules (VALID must remain high until READY is asserted).
+
+## Features Checklist
+
+| Category | Feature | Status |
+| :--- | :--- | :--- |
+| **Protocol** | AXI4-Lite Compliance | ✅ Fully Implemented |
+| | Handshake Stability (VALID/READY) | ✅ Verified via ABV |
+| | Response Handling (BRESP/RRESP) | ✅ OKAY (00) |
+| **Logic** | Address Decoding | ✅ 5-bit Sub-addressing |
+| | Register Read/Write | ✅ 4 x 32-bit Registers |
+| | Asynchronous Reset | ✅ Active-Low Implementation |
+| **Verification** | Directed Testbench | ✅ 3 Detailed Testcases |
+| | Assertion-Based (ABV) | ✅ Basic (SVA included) |
+| | Simulation Logging | ✅ Timestamped (ns) |
 
 ## Verification (ABV & Directed TB)
 
@@ -21,38 +50,33 @@ The `axi4_lite_if.sv` contains assertions to validate:
 - Response (`BRESP`/`RRESP`) validity.
 
 > [!NOTE]
-> Concurrent assertions are implemented but commented out in the source for compatibility with open-source tools (Icarus Verilog). These are fully functional on commercial simulators like VCS or Questa.
-
-### Test Scenarios
-- **TC_01 (Write)**: Write `0xDEADBEEF` to register offset `0x04`.
-- **TC_02 (Read)**: Read back from register offset `0x04`.
-- **TC_03 (Data Integrity)**: Verify read-back value matches the original write.
+> Concurrent assertions are implemented but commented out in the source for compatibility with open-source tools (Icarus Verilog). Full concurrent SVA checking is intended for commercial simulators such as VCS or Questa.
 
 ## Simulation & Results
 
-### Annotated Waveform (Vivado Logic Analyzer)
+### Annotated Simulation Waveform (XSim/GTKWave)
 ![AXI4-Lite Waveform](docs/waveform_annotated.png)
 *Figure 1: Timing diagram showing TC_01 (Write), TC_02 (Read Address), and TC_03 (Data Verified).*
 
 ### Execution Log (iverilog)
 ```text
 [@ 0 ns] [INFO] Starting AXI4-Lite Slave Verification...
-[@ 20000 ns] [INFO] Reset Released.
-[@ 35000 ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
-[@ 65000 ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
-[@ 65000 ns] [INFO] [TC_03] Data Integrity Check: PASSED
-[@ 115000 ns] [INFO] Simulation Finished.
+[@ 20 ns] [INFO] Reset Released.
+[@ 45 ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
+[@ 75 ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
+[@ 75 ns] [INFO] [TC_03] Data Integrity Check: PASSED
+[@ 125 ns] [INFO] Simulation Finished.
 ```
 
 ## Project Limitations
-- **Directed Testbench**: Current verification uses fixed stimulus.
-- **No Randomization**: Constrained-random stimulus is not yet implemented.
-- **Open-Source Constraints**: Full SVA and Coverage metrics require commercial EDA tools (Xcelium/VCS).
+- **Directed Testbench**: Uses fixed stimulus, covering basic path transitions.
+- **Functional Coverage**: Missing constrained-random stimulus and functional coverage (Planned for Phase 2).
+- **Tool Compatibility**: Basic simulation runs on Icarus; industrial SVA features require commercial EDA tools.
 
 ## Roadmap
-- **Phase 1 (Current)**: RTL + ABV + Directed TB.
-- **Phase 2 (Planned)**: Build a full UVM 1.2 environment (Agent, Scoreboard, and Sequences).
-- **Phase 3**: Multi-slave interconnect integration.
+- **Phase 1 (Done)**: RTL + ABV + Directed TB + Async Reset.
+- **Phase 2 (Planned)**: Full UVM 1.2 Environment implementation (Agent, Scoreboard, and Sequences).
+- **Phase 3**: Multi-master/Multi-slave Interconnect validation.
 
 ## Usage
 ```bash

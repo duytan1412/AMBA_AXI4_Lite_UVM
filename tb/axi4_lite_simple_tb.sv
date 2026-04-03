@@ -74,14 +74,15 @@ module axi4_lite_simple_tb();
     initial clk = 0;
     always #5 clk = ~clk;
 
-    // VCD Dump
+    // VCD Dump & Time Format
     initial begin
+        $timeformat(-9, 0, " ns", 10); // ns units, 0 decimals
         $dumpfile("dump.vcd");
         $dumpvars(0, axi4_lite_simple_tb);
     end
 
     initial begin
-        $display("[@ %0t ns] [INFO] Starting AXI4-Lite Slave Verification...", $time);
+        $display("[@ %t] [INFO] Starting AXI4-Lite Slave Verification...", $time);
         // Async Reset
         rst_n = 0;
         r_awvalid = 0;
@@ -90,7 +91,7 @@ module axi4_lite_simple_tb();
         r_rready = 1;
         bready = 1;
         #20 rst_n = 1;
-        $display("[@ %0t ns] [INFO] Reset Released.", $time);
+        $display("[@ %t] [INFO] Reset Released.", $time);
 
         // --- TC_01: Single Word Write ---
         #10;
@@ -103,7 +104,7 @@ module axi4_lite_simple_tb();
         r_awvalid = 0;
         r_wvalid = 0;
         wait(bvalid); 
-        $display("[@ %0t ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF", $time);
+        $display("[@ %t] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF", $time);
 
         // --- TC_02: Single Word Read ---
         #20;
@@ -113,16 +114,16 @@ module axi4_lite_simple_tb();
         @(posedge clk);
         r_arvalid = 0;
         wait(rvalid);
-        $display("[@ %0t ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0x%h", $time, rdata);
+        $display("[@ %t] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0x%h", $time, rdata);
 
         // --- TC_03: Data Integrity Check ---
         if (rdata == 32'hDEAD_BEEF)
-            $display("[@ %0t ns] [INFO] [TC_03] Data Integrity Check: PASSED", $time);
+            $display("[@ %t] [INFO] [TC_03] Data Integrity Check: PASSED", $time);
         else
-            $display("[@ %0t ns] [ERROR] [TC_03] Data Integrity Check: FAILED (Expected 0xDEADBEEF, Got 0x%h)", $time, rdata);
+            $display("[@ %t] [ERROR] [TC_03] Data Integrity Check: FAILED (Expected 0xDEADBEEF, Got 0x%h)", $time, rdata);
 
         #50;
-        $display("[@ %0t ns] [INFO] Simulation Finished.", $time);
+        $display("[@ %t] [INFO] Simulation Finished.", $time);
         $finish;
     end
 
