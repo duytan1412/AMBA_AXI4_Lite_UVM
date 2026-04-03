@@ -60,7 +60,7 @@ module axi4_lite_slave #(
     // Write Channel Logic (AW and W handshaking)
     //-----------------------------------------
     // Accept address and data when both are valid and we are not busy sending a B-response
-    always_ff @(posedge aclk) begin
+    always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             s_axi_awready <= 1'b0;
             s_axi_wready  <= 1'b0;
@@ -80,7 +80,7 @@ module axi4_lite_slave #(
     assign slv_reg_wren = s_axi_wready && s_axi_wvalid && s_axi_awready && s_axi_awvalid;
 
     // Perform actual write to registers using WSTRB
-    always_ff @(posedge aclk) begin
+    always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             slv_reg0 <= '0;
             slv_reg1 <= '0;
@@ -118,7 +118,7 @@ module axi4_lite_slave #(
     end
 
     // Generation of B-Response
-    always_ff @(posedge aclk) begin
+    always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             s_axi_bvalid <= 1'b0;
             s_axi_bresp  <= 2'b0;
@@ -136,7 +136,7 @@ module axi4_lite_slave #(
     // Read Channel Logic (AR and R handshaking)
     //-----------------------------------------
     // Accept read address when valid and not busy
-    always_ff @(posedge aclk) begin
+    always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             s_axi_arready <= 1'b0;
             araddr_reg    <= '0;
@@ -166,7 +166,7 @@ module axi4_lite_slave #(
     end
 
     // Generation of Read Valid and Read Response
-    always_ff @(posedge aclk) begin
+    always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             s_axi_rvalid <= 1'b0;
             s_axi_rresp  <= 2'b0;

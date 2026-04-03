@@ -81,7 +81,7 @@ module axi4_lite_simple_tb();
     end
 
     initial begin
-        $display("[TEST] Starting AXI4-Lite Slave Verification...");
+        $display("[@ %0t ns] [INFO] Starting AXI4-Lite Slave Verification...", $time);
         // Async Reset
         rst_n = 0;
         r_awvalid = 0;
@@ -90,7 +90,7 @@ module axi4_lite_simple_tb();
         r_rready = 1;
         bready = 1;
         #20 rst_n = 1;
-        $display("[TEST] Reset Released.");
+        $display("[@ %0t ns] [INFO] Reset Released.", $time);
 
         // --- TC_01: Single Word Write ---
         #10;
@@ -103,7 +103,7 @@ module axi4_lite_simple_tb();
         r_awvalid = 0;
         r_wvalid = 0;
         wait(bvalid); 
-        $display("[TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF");
+        $display("[@ %0t ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF", $time);
 
         // --- TC_02: Single Word Read ---
         #20;
@@ -113,16 +113,16 @@ module axi4_lite_simple_tb();
         @(posedge clk);
         r_arvalid = 0;
         wait(rvalid);
-        $display("[TC_02] Read Handshake Successful: Addr=0x04, RData=0x%h", rdata);
+        $display("[@ %0t ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0x%h", $time, rdata);
 
         // --- TC_03: Data Integrity Check ---
         if (rdata == 32'hDEAD_BEEF)
-            $display("[TC_03] Data Integrity Check: PASSED");
+            $display("[@ %0t ns] [INFO] [TC_03] Data Integrity Check: PASSED", $time);
         else
-            $display("[TC_03] Data Integrity Check: FAILED (Expected 0xDEADBEEF, Got 0x%h)", rdata);
+            $display("[@ %0t ns] [ERROR] [TC_03] Data Integrity Check: FAILED (Expected 0xDEADBEEF, Got 0x%h)", $time, rdata);
 
         #50;
-        $display("[TEST] Simulation Finished.");
+        $display("[@ %0t ns] [INFO] Simulation Finished.", $time);
         $finish;
     end
 

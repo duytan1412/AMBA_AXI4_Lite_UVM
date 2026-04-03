@@ -1,70 +1,60 @@
 # AXI4-Lite Slave RTL & ABV Verification
 
-A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog, featuring an **Assertion-Based Verification (ABV)** suite for interface integrity and functional correctness.
+A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog. This project demonstrates **Assertion-Based Verification (ABV)** for interface integrity and functional correctness.
 
 ## Technical Specifications
 
-The design implements a 4-register bank (32-bit width) with full support for the AXI4-Lite 5-channel handshake protocol:
-- **Write Channels**: Support for simultaneous `AW` (Address Write) and `W` (Data Write) phases with `WSTRB` (partial write) support.
-- **Read Channels**: Independent `AR` (Address Read) and `R` (Data Read) synchronization.
-- **Protocol Stability**: Handshake logic ensures `VALID` signals remain stable until acknowledged by `READY` (Slave logic).
-- **Reset Management**: Synchronous reset handling to drive all protocol signals to idle states.
+The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 5-channel handshake:
+- **Asynchronous Reset**: Uses `aresetn` (Active-Low) for asynchronous initialization of all protocol registers.
+- **Write Path**: Supports `AW` (Address) and `W` (Data) phases with `WSTRB` (byte-enable) logic.
+- **Read Path**: Independent `AR` (Address) and `R` (Data/Status) synchronization.
+- **Handshake Logic**: Fully compliant with AXI4 stability rules (VALID must remain high until READY is asserted).
 
-## Verification Methodology (ABV)
+## Verification (ABV & Directed TB)
 
-This repository utilizes **Assertion-Based Verification (ABV)** to monitor interface compliance in real-time. 
+This project uses SystemVerilog Assertions (SVA) to monitor protocol compliance.
 
 ### Protocol Checkers (SVA)
-The SystemVerilog Interface (`axi4_lite_if.sv`) includes assertions for:
-- `awvalid` / `wvalid` / `arvalid` stability during wait states.
-- `bvalid` / `rvalid` handshake edges.
+The `axi4_lite_if.sv` contains assertions to validate:
+- Handshake stability (no dropping VALID before READY).
 - Reset-to-idle state transitions.
+- Response (`BRESP`/`RRESP`) validity.
 
 > [!NOTE]
-> Concurrent assertions and functional coverage (`cover property`) are implemented in the interface but wrapped for compatibility with open-source tools (Icarus Verilog). These are fully operational on commercial simulators (VCS/Questa).
+> Concurrent assertions are implemented but commented out in the source for compatibility with open-source tools (Icarus Verilog). These are fully functional on commercial simulators like VCS or Questa.
 
-### Test Plan & Scenarios
-Verification is performed via a directed SystemVerilog testbench (`axi4_lite_simple_tb.sv`).
-- **TC_01 (Async Reset)**: Verifies all bus signals are de-asserted during and after reset.
-- **TC_02 (Single Write)**: Executes a 32-bit write transaction to register offset `0x04`.
-- **TC_03 (Single Read)**: Executes a 32-bit read transaction from register offset `0x04`.
-- **TC_04 (Data Integrity)**: Compares Read data against previously Written data to ensure core logic correctness.
+### Test Scenarios
+- **TC_01 (Write)**: Write `0xDEADBEEF` to register offset `0x04`.
+- **TC_02 (Read)**: Read back from register offset `0x04`.
+- **TC_03 (Data Integrity)**: Verify read-back value matches the original write.
 
-## Simulation Results
+## Simulation & Results
 
-### Waveform Analysis
-The waveform below illustrates the 5-channel handshake sequence for a successful Write followed by a Read operation.
-
-![AXI4-Lite Handshake](docs/axi_handshake.png)
-
-### Execution Log
-Sample output from `make sim` using `iverilog`:
+### Execution Log (iverilog)
 ```text
-[TEST] Starting AXI4-Lite Slave Verification...
-[TEST] Reset Released.
-[TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
-[TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
-[TC_03] Data Integrity Check: PASSED
-[TEST] Simulation Finished.
+[@ 0 ns] [INFO] Starting AXI4-Lite Slave Verification...
+[@ 20000 ns] [INFO] Reset Released.
+[@ 35000 ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
+[@ 65000 ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
+[@ 65000 ns] [INFO] [TC_03] Data Integrity Check: PASSED
+[@ 115000 ns] [INFO] Simulation Finished.
 ```
 
-## Project Roadmap
+## Project Limitations
+- **Directed Testbench**: Current verification uses fixed stimulus.
+- **No Randomization**: Constrained-random stimulus is not yet implemented.
+- **Open-Source Constraints**: Full SVA and Coverage metrics require commercial EDA tools (Xcelium/VCS).
 
-- **Phase 1 (Current)**: RTL + ABV (SVA) + Directed Testbench.
-- **Phase 2 (Planned)**: Full UVM 1.2 Migration (Agent, Sequencer, Scoreboard, and Constrained-Random stimulus).
-- **Phase 3**: Integration with AXI-to-APB Bridge.
+## Roadmap
+- **Phase 1 (Current)**: RTL + ABV + Directed TB.
+- **Phase 2 (Planned)**: Build a full UVM 1.2 environment (Agent, Scoreboard, and Sequences).
+- **Phase 3**: Multi-slave interconnect integration.
 
 ## Usage
-
-### Prerequisites
-- **Icarus Verilog** (v11+)
-- **GTKWave** (for waveform viewing)
-
-### Running Simulation
 ```bash
-make sim   # Compile and run verification sequence
-make waves # View signals in GTKWave
+make sim   # Run verification log
+make waves # View waveforms (GTKWave)
 ```
 
 ## License
-MIT License.
+MIT
