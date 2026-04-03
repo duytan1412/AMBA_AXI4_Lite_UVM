@@ -155,7 +155,7 @@ module axi4_lite_slave #(
 
     // Read Data output multiplexer
     logic [DATA_WIDTH-1:0] reg_data_out;
-    always_comb begin
+    always @(*) begin
         case (araddr_reg[3:2])
             2'h0: reg_data_out = slv_reg0;
             2'h1: reg_data_out = slv_reg1;

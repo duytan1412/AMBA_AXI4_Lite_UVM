@@ -24,7 +24,7 @@ lint:
 	@echo "================================================="
 	@echo " Running Linting on Verification IF (axi4_lite_if.sv)..."
 	@echo "================================================="
-	$(CC) $(FLAGS) -tnull $(TB_SRC) 2>/dev/null || true
+	-$(CC) $(FLAGS) -tnull $(TB_SRC)
 	@echo "✅ Interface SVA Lint Passed"
 	@echo ""
 
