@@ -30,6 +30,10 @@ The `axi4_lite_if.sv` contains assertions to validate:
 
 ## Simulation & Results
 
+### Annotated Waveform (Vivado Logic Analyzer)
+![AXI4-Lite Waveform](docs/waveform_annotated.png)
+*Figure 1: Timing diagram showing TC_01 (Write), TC_02 (Read Address), and TC_03 (Data Verified).*
+
 ### Execution Log (iverilog)
 ```text
 [@ 0 ns] [INFO] Starting AXI4-Lite Slave Verification...
