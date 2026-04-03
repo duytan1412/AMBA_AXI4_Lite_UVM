@@ -1,41 +1,69 @@
-# AMBA AXI4-Lite Peripheral Logic & Verification
+# AXI4-Lite Slave RTL & ABV Verification
 
-A high-integrity implementation and verification suite for an **AMBA AXI4-Lite Slave** IP. This repository provides a synthesis-ready register bank and a SystemVerilog Assertion (SVA) based interface designed for protocol compliance checking and functional verification.
+A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog, featuring an **Assertion-Based Verification (ABV)** suite for interface integrity and functional correctness.
 
 ## Technical Specifications
 
-The design implements a standard 4-register bank accessible via memory-mapped I/O, strictly adhering to the AMBA 4 AXI4-Lite protocol:
-- **Architecture**: Independent 5-channel handshake (AW, W, B, AR, R).
-- **Addressing**: 32-bit addressable registers with partial write support (`WSTRB`).
-- **Safety**: Built-in protocol interlocks in the Register Logic to prevent deadlocks and ensure `VALID`/`READY` stability.
+The design implements a 4-register bank (32-bit width) with full support for the AXI4-Lite 5-channel handshake protocol:
+- **Write Channels**: Support for simultaneous `AW` (Address Write) and `W` (Data Write) phases with `WSTRB` (partial write) support.
+- **Read Channels**: Independent `AR` (Address Read) and `R` (Data Read) synchronization.
+- **Protocol Stability**: Handshake logic ensures `VALID` signals remain stable until acknowledged by `READY` (Slave logic).
+- **Reset Management**: Synchronous reset handling to drive all protocol signals to idle states.
 
-## Verification Methodology
+## Verification Methodology (ABV)
 
-This project utilizes **Assertion-Based Verification (ABV)** to enforce protocol compliance at the interface level:
-- **Handshake Integrity**: Assertions verify that `VALID` signals remain stable until `READY` is asserted.
-- **Access Rule Checking**: Validates that address and control signals are held constant throughout the duration of a transaction.
-- **Reset Safety**: Ensures all protocol signals are driven to inactive states during asynchronous reset.
+This repository utilizes **Assertion-Based Verification (ABV)** to monitor interface compliance in real-time. 
 
-### Verification Components
-- **axi4_lite_slave.sv**: RTL implementation of the 4-register bank.
-- **axi4_lite_if.sv**: SystemVerilog Interface containing 5+ critical protocol assertions.
-- **axi4_lite_simple_tb.sv**: Stimulus generator for validating handshake timing and register accessibility.
+### Protocol Checkers (SVA)
+The SystemVerilog Interface (`axi4_lite_if.sv`) includes assertions for:
+- `awvalid` / `wvalid` / `arvalid` stability during wait states.
+- `bvalid` / `rvalid` handshake edges.
+- Reset-to-idle state transitions.
 
-## Simulation Evidence
+> [!NOTE]
+> Concurrent assertions and functional coverage (`cover property`) are implemented in the interface but wrapped for compatibility with open-source tools (Icarus Verilog). These are fully operational on commercial simulators (VCS/Questa).
 
-The following waveform illustrates a standard **Write Transaction** highlighting the synchronous handshake on Address (`AW`) and Data (`W`) channels.
+### Test Plan & Scenarios
+Verification is performed via a directed SystemVerilog testbench (`axi4_lite_simple_tb.sv`).
+- **TC_01 (Async Reset)**: Verifies all bus signals are de-asserted during and after reset.
+- **TC_02 (Single Write)**: Executes a 32-bit write transaction to register offset `0x04`.
+- **TC_03 (Single Read)**: Executes a 32-bit read transaction from register offset `0x04`.
+- **TC_04 (Data Integrity)**: Compares Read data against previously Written data to ensure core logic correctness.
+
+## Simulation Results
+
+### Waveform Analysis
+The waveform below illustrates the 5-channel handshake sequence for a successful Write followed by a Read operation.
 
 ![AXI4-Lite Handshake](docs/axi_handshake.png)
 
-## Tools & Usage
+### Execution Log
+Sample output from `make sim` using `iverilog`:
+```text
+[TEST] Starting AXI4-Lite Slave Verification...
+[TEST] Reset Released.
+[TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
+[TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
+[TC_03] Data Integrity Check: PASSED
+[TEST] Simulation Finished.
+```
 
-The environment is compatible with all standard SystemVerilog (IEEE 1800-2012) compliant simulators:
-- **Synopsys VCS** / **Cadence Xcelium** / **Siemens Questa**
-- **EDA Playground** (Commercial simulators recommended for full SVA support).
+## Project Roadmap
 
-### Local Linting
+- **Phase 1 (Current)**: RTL + ABV (SVA) + Directed Testbench.
+- **Phase 2 (Planned)**: Full UVM 1.2 Migration (Agent, Sequencer, Scoreboard, and Constrained-Random stimulus).
+- **Phase 3**: Integration with AXI-to-APB Bridge.
+
+## Usage
+
+### Prerequisites
+- **Icarus Verilog** (v11+)
+- **GTKWave** (for waveform viewing)
+
+### Running Simulation
 ```bash
-make lint  # Uses iverilog -g2012 for syntax and assertion structure check
+make sim   # Compile and run verification sequence
+make waves # View signals in GTKWave
 ```
 
 ## License

@@ -17,17 +17,32 @@ module axi4_lite_simple_tb();
     wire        bvalid;
     reg         bready;
 
+    // Read Channels
+    wire [4:0]  araddr;
+    wire        arvalid;
+    wire        arready;
+    wire [31:0] rdata;
+    wire [1:0]  rresp;
+    wire        rvalid;
+    wire        rready;
+
     // Master-side registers for stimulus generation
     reg [4:0]  r_awaddr;
     reg        r_awvalid;
     reg [31:0] r_wdata;
     reg        r_wvalid;
+    reg [4:0]  r_araddr;
+    reg        r_arvalid;
+    reg        r_rready;
 
     assign awaddr  = r_awaddr;
     assign awvalid = r_awvalid;
     assign wdata   = r_wdata;
     assign wstrb   = 4'hF;
     assign wvalid  = r_wvalid;
+    assign araddr  = r_araddr;
+    assign arvalid = r_arvalid;
+    assign rready  = r_rready;
 
     // Instantiate DUT
     axi4_lite_slave dut (
@@ -44,40 +59,70 @@ module axi4_lite_simple_tb();
         .s_axi_bresp(bresp),
         .s_axi_bvalid(bvalid),
         .s_axi_bready(bready),
-        // Connect others to 0/dummy
-        .s_axi_araddr(5'h0),
+        // Read Channels
+        .s_axi_araddr(araddr),
         .s_axi_arprot(3'b000),
-        .s_axi_arvalid(1'b0),
-        .s_axi_rready(1'b0)
+        .s_axi_arvalid(arvalid),
+        .s_axi_arready(arready),
+        .s_axi_rdata(rdata),
+        .s_axi_rresp(rresp),
+        .s_axi_rvalid(rvalid),
+        .s_axi_rready(rready)
     );
 
     // Clock gen
     initial clk = 0;
     always #5 clk = ~clk;
 
+    // VCD Dump
     initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, axi4_lite_simple_tb);
+    end
+
+    initial begin
+        $display("[TEST] Starting AXI4-Lite Slave Verification...");
         // Async Reset
         rst_n = 0;
         r_awvalid = 0;
         r_wvalid = 0;
+        r_arvalid = 0;
+        r_rready = 1;
         bready = 1;
         #20 rst_n = 1;
+        $display("[TEST] Reset Released.");
 
-        // --- Basic Write Handshake Simulation ---
+        // --- TC_01: Single Word Write ---
         #10;
         r_awaddr = 5'h04;
-        r_awvalid = 1;      // Drive address
-        r_wdata = 32'hAAAA_BBBB;
-        r_wvalid = 1;      // Drive data
-        
-        // Wait for Slave READY handshake
+        r_awvalid = 1;
+        r_wdata = 32'hDEAD_BEEF;
+        r_wvalid = 1;
         wait(awready && wready);
         @(posedge clk);
         r_awvalid = 0;
         r_wvalid = 0;
+        wait(bvalid); 
+        $display("[TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF");
+
+        // --- TC_02: Single Word Read ---
+        #20;
+        r_araddr = 5'h04;
+        r_arvalid = 1;
+        wait(arready);
+        @(posedge clk);
+        r_arvalid = 0;
+        wait(rvalid);
+        $display("[TC_02] Read Handshake Successful: Addr=0x04, RData=0x%h", rdata);
+
+        // --- TC_03: Data Integrity Check ---
+        if (rdata == 32'hDEAD_BEEF)
+            $display("[TC_03] Data Integrity Check: PASSED");
+        else
+            $display("[TC_03] Data Integrity Check: FAILED (Expected 0xDEADBEEF, Got 0x%h)", rdata);
 
         #50;
-        $display("Simulation Done: AXI Handshake successful.");
+        $display("[TEST] Simulation Finished.");
         $finish;
     end
 

@@ -1,32 +1,39 @@
-# Makefile for AMBA AXI4-Lite UVM Verification Portfolio
+# Makefile for AXI4-Lite Slave RTL & ABV Verification
 
 # Tools
 CC = iverilog
 FLAGS = -g2012 -Wall
+VVP = vvp
 
 # Sources
 RTL_SRC = rtl/axi4_lite_slave.sv
-TB_SRC = tb/uvm/axi4_lite_if.sv
+TB_IF  = tb/uvm/axi4_lite_if.sv
+TB_TOP = tb/axi4_lite_simple_tb.sv
 
-.PHONY: all lint clean
+OUT = axi_sim.vvp
+VCD = dump.vcd
 
-all: lint
+.PHONY: all lint sim waves clean
 
-# We use iverilog to lint the syntax for both RTL and Interface (including SVA).
-# Note: full UVM simulation requires Cadence Xcelium/Synopsys VCS on EDA Playground.
+all: sim
+
+# Lint checks for syntax and basic SVA structure
 lint:
-	@echo "================================================="
-	@echo " Running Linting on RTL (axi4_lite_slave.sv)..."
-	@echo "================================================="
-	$(CC) $(FLAGS) -tnull $(RTL_SRC)
-	@echo "✅ RTL Lint Passed"
-	@echo ""
-	@echo "================================================="
-	@echo " Running Linting on Verification IF (axi4_lite_if.sv)..."
-	@echo "================================================="
-	-$(CC) $(FLAGS) -tnull $(TB_SRC)
-	@echo "✅ Interface SVA Lint Passed"
-	@echo ""
+	@echo "--- Running RTL & IF Lint ---"
+	$(CC) $(FLAGS) -tnull $(RTL_SRC) $(TB_IF)
+	@echo "✅ Lint Passed"
+
+# Full simulation: Compile and run testbench
+sim: $(RTL_SRC) $(TB_IF) $(TB_TOP)
+	@echo "--- Compiling AXI4-Lite Verification Environment ---"
+	$(CC) $(FLAGS) -o $(OUT) $(RTL_SRC) $(TB_IF) $(TB_TOP)
+	@echo "--- Running Simulation ---"
+	$(VVP) $(OUT)
+	@echo "✅ Simulation Finished"
+
+# Open waveform in GTKWave
+waves: $(VCD)
+	gtkwave $(VCD)
 
 clean:
-	rm -rf *.vcd *.sim work *~
+	rm -rf $(OUT) $(VCD) *.sim *~
