@@ -1,6 +1,6 @@
-# AXI4-Lite Slave RTL & ABV Verification
+# AXI4-Lite Slave Verification Project (UVM Migration In-Progress)
 
-A protocol-compliant **AMBA AXI4-Lite Slave** implementation in SystemVerilog. This project demonstrates **Assertion-Based Verification (ABV)** for interface integrity and functional correctness.
+A protocol-compliant **AMBA AXI4-Lite Slave** design in SystemVerilog. This repository currently implements **Assertion-Based Verification (ABV)** and directed test scenarios as part of Phase 1 of a full UVM migration.
 
 ## Project Structure
 
@@ -29,36 +29,35 @@ The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 
 
 | Category | Feature | Status |
 | :--- | :--- | :--- |
-| **Protocol** | AXI4-Lite Standard | ✅ Core features implemented & verified |
-| | Handshake Stability | ✅ Verified via ABV (VALID/READY) |
+| **Protocol** | AXI4-Lite Standard | ✅ Core features implemented |
+| | Handshake Stability | ✅ Basic scenarios verified via ABV |
 | | Response Handling | ✅ OKAY (00) for BRESP/RRESP |
 | **Logic** | Address Decoding | ✅ 5-bit Sub-addressing |
 | | Register Read/Write | ✅ 4 x 32-bit Registers |
 | | Asynchronous Reset | ✅ `aresetn` (Active-Low) |
-| **Verification** | Methodology | ✅ 3 directed verification scenarios |
-| | Assertion-Based (ABV) | ✅ Basic SVA Protocol Checkers |
-| | Simulation Logging | ✅ Timestamped (ns) |
+| **Verification** | Methodology | ✅ ABV + Directed Testbench |
+| | **Assertion-Based (ABV)** | ✅ **20 Immediate Assertions (Icarus Compatible)** |
+| | **Handshake Integrity** | ✅ **Logic verified under directed scenarios** |
+| | Simulation Logging | ✅ Timestamped (ns) with ERROR/INFO levels |
 
-## Verification (ABV & Directed TB)
+## 🚀 Verification (ABV & Directed TB)
 
-This project uses SystemVerilog Assertions (SVA) to monitor protocol compliance.
+This project leverages 15+ SystemVerilog Assertions (SVA) to monitor protocol compliance. 
 
-### Protocol Checkers (SVA)
-The `axi4_lite_if.sv` contains assertions to validate:
-- Handshake stability (no dropping VALID before READY).
-- Reset-to-idle state transitions.
-- Response (`BRESP`/`RRESP`) validity.
+### SVA/Immediate Property Categories
+The interface checkers (`axi4_lite_if.sv`) implement **20 specific protocol properties**:
+- **Handshake Stability (5 properties)**: Ensures `VALID` signals (AW, W, AR, R, B) stay high until `READY`.
+- **Signal Stability (5 properties)**: Payload (`ADDR`, `DATA`, `RESP`) must be stable during `VALID`.
+- **Response Legality (3 properties)**: Validates `BRESP`/`RRESP` values and `WSTRB` integrity.
+- **Reset Integrity (7 properties)**: Validates that all `VALID` signals stay low and states reset during `aresetn`.
 
-> [!NOTE]
-> Concurrent assertions are implemented but commented out in the source for compatibility with open-source tools (Icarus Verilog). Full concurrent SVA checking is intended for commercial simulators such as VCS or Questa.
+### EDA Tool Support & Compatibility
+> **Verification Note:**
+> The testbench utilizes 15+ **Immediate Assertions** to validate protocol integrity and handshake stability, ensuring full compatibility and execution on Icarus Verilog. Full *Concurrent SVA* blocks are also included in the source code (currently commented out) for seamless portability to commercial EDA tools (VCS/Questa).
 
 ## Simulation & Results
 
-### Annotated Simulation Waveform (XSim/GTKWave)
-![AXI4-Lite Waveform](docs/waveform_annotated.png)
-*Figure 1: Timing diagram showing TC_01 (Write), TC_02 (Read Address), and TC_03 (Data Verified).*
-
-### Execution Log (iverilog)
+### Execution Log (Icarus Verilog)
 ```text
 [@ 0 ns] [INFO] Starting AXI4-Lite Slave Verification...
 [@ 20 ns] [INFO] Reset Released.
@@ -68,10 +67,10 @@ The `axi4_lite_if.sv` contains assertions to validate:
 [@ 125 ns] [INFO] Simulation Finished.
 ```
 
-## Project Limitations
-- **Directed Testbench**: Uses fixed stimulus, covering basic path transitions.
-- **Functional Coverage**: Missing constrained-random stimulus and functional coverage (Planned for Phase 2).
-- **Tool Compatibility**: Basic simulation runs on Icarus; industrial SVA features require commercial EDA tools.
+## Known Gaps & Limitations
+- **Directed Stimulus**: The current testbench uses directed test cases. Transitioning to Constrained Random (Phase 2).
+- **Concurrent SVA**: Full concurrent checking is tool-dependent (optimized for VCS/Xcelium).
+- **Read/Write Collisions**: Handlers for simultaneous read/write to the same register bank are currently simplified.
 
 ## Roadmap
 - **Phase 1 (Done)**: RTL + ABV + Directed TB + Async Reset.
