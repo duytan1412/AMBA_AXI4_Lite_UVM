@@ -26,39 +26,39 @@ module tb_top;
 
     // Interface Instance
     axi4_lite_if #(
-        .DATA_WIDTH(32),
-        .ADDR_WIDTH(5)
+       .DATA_WIDTH(32),
+       .ADDR_WIDTH(5)
     ) intf (
-        .aclk(clk),
-        .aresetn(rst_n)
+       .aclk(clk),
+       .aresetn(rst_n)
     );
 
     // DUT Instance
     axi4_lite_slave #(
-        .DATA_WIDTH(32),
-        .ADDR_WIDTH(5)
+       .DATA_WIDTH(32),
+       .ADDR_WIDTH(5)
     ) dut (
-        .aclk(intf.aclk),
-        .aresetn(intf.aresetn),
-        .s_axi_awaddr(intf.awaddr),
-        .s_axi_awprot(intf.awprot),
-        .s_axi_awvalid(intf.awvalid),
-        .s_axi_awready(intf.awready),
-        .s_axi_wdata(intf.wdata),
-        .s_axi_wstrb(intf.wstrb),
-        .s_axi_wvalid(intf.wvalid),
-        .s_axi_wready(intf.wready),
-        .s_axi_bresp(intf.bresp),
-        .s_axi_bvalid(intf.bvalid),
-        .s_axi_bready(intf.bready),
-        .s_axi_araddr(intf.araddr),
-        .s_axi_arprot(intf.arprot),
-        .s_axi_arvalid(intf.arvalid),
-        .s_axi_arready(intf.arready),
-        .s_axi_rdata(intf.rdata),
-        .s_axi_rresp(intf.rresp),
-        .s_axi_rvalid(intf.rvalid),
-        .s_axi_rready(intf.rready)
+       .aclk(intf.aclk),
+       .aresetn(intf.aresetn),
+       .s_axi_awaddr(intf.awaddr),
+       .s_axi_awprot(intf.awprot),
+       .s_axi_awvalid(intf.awvalid),
+       .s_axi_awready(intf.awready),
+       .s_axi_wdata(intf.wdata),
+       .s_axi_wstrb(intf.wstrb),
+       .s_axi_wvalid(intf.wvalid),
+       .s_axi_wready(intf.wready),
+       .s_axi_bresp(intf.bresp),
+       .s_axi_bvalid(intf.bvalid),
+       .s_axi_bready(intf.bready),
+       .s_axi_araddr(intf.araddr),
+       .s_axi_arprot(intf.arprot),
+       .s_axi_arvalid(intf.arvalid),
+       .s_axi_arready(intf.arready),
+       .s_axi_rdata(intf.rdata),
+       .s_axi_rresp(intf.rresp),
+       .s_axi_rvalid(intf.rvalid),
+       .s_axi_rready(intf.rready)
     );
 
     initial begin

@@ -46,28 +46,28 @@ module axi4_lite_simple_tb();
 
     // Instantiate DUT
     axi4_lite_slave dut (
-        .aclk(clk),
-        .aresetn(aresetn),
-        .s_axi_awaddr(awaddr),
-        .s_axi_awprot(3'b000),
-        .s_axi_awvalid(awvalid),
-        .s_axi_awready(awready),
-        .s_axi_wdata(wdata),
-        .s_axi_wstrb(wstrb),
-        .s_axi_wvalid(wvalid),
-        .s_axi_wready(wready),
-        .s_axi_bresp(bresp),
-        .s_axi_bvalid(bvalid),
-        .s_axi_bready(bready),
+       .aclk(clk),
+       .aresetn(aresetn),
+       .s_axi_awaddr(awaddr),
+       .s_axi_awprot(3'b000),
+       .s_axi_awvalid(awvalid),
+       .s_axi_awready(awready),
+       .s_axi_wdata(wdata),
+       .s_axi_wstrb(wstrb),
+       .s_axi_wvalid(wvalid),
+       .s_axi_wready(wready),
+       .s_axi_bresp(bresp),
+       .s_axi_bvalid(bvalid),
+       .s_axi_bready(bready),
         // Read Channels
-        .s_axi_araddr(araddr),
-        .s_axi_arprot(3'b000),
-        .s_axi_arvalid(arvalid),
-        .s_axi_arready(arready),
-        .s_axi_rdata(rdata),
-        .s_axi_rresp(rresp),
-        .s_axi_rvalid(rvalid),
-        .s_axi_rready(rready)
+       .s_axi_araddr(araddr),
+       .s_axi_arprot(3'b000),
+       .s_axi_arvalid(arvalid),
+       .s_axi_arready(arready),
+       .s_axi_rdata(rdata),
+       .s_axi_rresp(rresp),
+       .s_axi_rvalid(rvalid),
+       .s_axi_rready(rready)
     );
 
     // Clock gen
