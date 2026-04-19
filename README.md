@@ -1,4 +1,4 @@
-# 🛡️ AMBA AXI4-Lite Slave UVM Verification Portfolio
+# AMBA AXI4-Lite Slave UVM Verification Portfolio
 [![UVM](https://img.shields.io/badge/Methodology-UVM--1.2-blue)](https://accellera.org/downloads/standards/uvm)
 [![AXI4-Lite](https://img.shields.io/badge/Protocol-AMBA--AXI4--Lite-orange)](https://developer.arm.com/documentation/ihi0022/e/)
 
@@ -6,7 +6,7 @@ A comprehensive UVM-based verification project for an AXI4-Lite Slave IP. This p
 
 ---
 
-## 🚀 Architectural Highlights
+## Architectural Highlights
 
 This environment is built with Separation of Concerns (SoC) and Scalability in mind:
 
@@ -19,7 +19,7 @@ This environment is built with Separation of Concerns (SoC) and Scalability in m
 
 ---
 
-## 🏗️ Verification Environment Architecture
+## Verification Environment Architecture
 
 ```mermaid
 graph TD
@@ -54,7 +54,7 @@ graph TD
 
 ---
 
-## 📊 Verification Matrix (Test Plan)
+## Verification Matrix (Test Plan)
 
 | Test ID | Objective | Stimulus Type | Success Criteria |
 | :--- | :--- | :--- | :--- |
@@ -65,7 +65,7 @@ graph TD
 
 ---
 
-## 🎯 Functional Coverage & Verification Closure
+## Functional Coverage and Verification Closure
 
 To ensure protocol compliance and reliability, the environment targets 100% functional closure:
 1.  **Address Space**: Coverage for all 4 register offsets and out-of-range boundaries.
@@ -80,7 +80,7 @@ To ensure protocol compliance and reliability, the environment targets 100% func
 
 ---
 
-## 📽️ Visual Verification Results
+## Visual Verification Results
 
 ### AXI4-Lite Read/Write Waveform
 ![Waveform Annotated](docs/waveform_annotated.png)
@@ -92,7 +92,7 @@ To ensure protocol compliance and reliability, the environment targets 100% func
 
 ---
 
-## 🛠️ Simulation & Deployment
+## Simulation and Deployment
 
 ### Toolchain Support
 *   **EDA Tools**: Designed to be compatible with industry-standard simulators such as **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
