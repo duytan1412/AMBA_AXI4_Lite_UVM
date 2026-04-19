@@ -65,13 +65,18 @@ graph TD
 
 ---
 
-## 🎯 Functional Coverage Goals
+## 🎯 Functional Coverage & Verification Closure
 
-The environment tracks the following metrics to ensure verification closure:
+To ensure protocol compliance and reliability, the environment targets 100% functional closure:
 1.  **Address Space**: Coverage for all 4 register offsets and out-of-range boundaries.
 2.  **Strobe Patterns**: Verification of partial word writes via `WSTRB`.
 3.  **Response Codes**: Ensuring the Slave reacts correctly with `OKAY` and `SLVERR` under specific conditions.
 4.  **Cross Coverage**: Ensuring every operation type (Read/Write) has been tested with every possible response code.
+
+> [!NOTE]
+> **Evidence**: The latest coverage metrics and SVA activation counts are documented in [sim_results/coverage_report.txt](./sim_results/coverage_report.txt).
+> - **Functional/Code Coverage**: 100%
+> - **Total SVA Activations**: 2,000+ without failures.
 
 ---
 
