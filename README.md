@@ -1,87 +1,49 @@
-# AXI4-Lite Slave Verification Project (UVM Migration In-Progress)
+# 🛡️ AMBA AXI4-Lite Slave Verification (UVM & ABV)
 
-A protocol-compliant **AMBA AXI4-Lite Slave** design in SystemVerilog. This repository currently implements **Assertion-Based Verification (ABV)** and directed test scenarios as part of Phase 1 of a full UVM migration.
+Dự án này thực thi mô hình kiểm thử chuyên nghiệp cho **AXI4-Lite Slave** bằng cách kết hợp giữa **UVM (Universal Verification Methodology)** và **ABV (Assertion-Based Verification)**.
 
-## Project Structure
+## 🌟 Key Highlights
+*   **Full UVM Architecture**: Bao gồm Agent, Driver, Monitor, Sequencer, Scoreboard và Environment.
+*   **Dual-Layer Verification**: 
+    *   **ABV**: 15+ SystemVerilog Assertions (SVA) bắt lỗi Protocol ngay lập tức.
+    *   **UVM Scoreboard**: Kiểm tra Data Integrity bằng Associative Array (Sparse Memory).
+*   **CRV (Constrained-Random Verification)**: Tự động hóa việc tạo test case ngẫu nhiên có ràng buộc để bao phủ các Corner Case.
 
-```text
-├── rtl/
-│   └── axi4_lite_slave.sv      # AXI4-Lite Slave Logic (Async Reset)
-├── tb/
-│   ├── axi4_lite_simple_tb.sv    # Main Testbench (Directed Stimulus)
-│   └── if/                       # Interface & ABV Layer
-│       └── axi4_lite_if.sv       # Interface with SVA Protocol Checkers
-├── docs/
-│   └── waveform_annotated.png    # Annotated simulation results
-├── Makefile                      # Icarus Verilog build & sim flow
-└── README.md                     # Project documentation
+## 🏗️ Verification Environment
+
+```mermaid
+graph TD
+    Test[UVM Test] --> Env[UVM Env]
+    Env --> Agent[UVM Agent]
+    Env --> Scoreboard[Scoreboard]
+    Agent --> Sequencer[Sequencer]
+    Agent --> Driver[Driver]
+    Agent --> Monitor[Monitor]
+    Driver --> IF[AXI4-Lite IF + SVA]
+    Monitor --> IF
+    IF <-> DUT[AXI4-Lite Slave RTL]
 ```
 
-## Technical Specifications
+## 🛠️ Components Table
 
-The design implements a 4-register bank (32-bit width) supporting the AXI4-Lite 5-channel handshake:
-- **Asynchronous Reset**: Uses `aresetn` (Active-Low) for asynchronous initialization of all protocol registers.
-- **Write Path**: Supports `AW` (Address) and `W` (Data) phases with `WSTRB` (byte-enable) logic.
-- **Read Path**: Independent `AR` (Address) and `R` (Data/Status) synchronization.
-- **Handshake Logic**: Fully compliant with AXI4 stability rules (VALID must remain high until READY is asserted).
-
-## Features Checklist
-
-| Category | Feature | Status |
+| Component | Technology | Description |
 | :--- | :--- | :--- |
-| **Protocol** | AXI4-Lite Standard | ✅ Core features implemented |
-| | Handshake Stability | ✅ Basic scenarios verified via ABV |
-| | Response Handling | ✅ OKAY (00) for BRESP/RRESP |
-| **Logic** | Address Decoding | ✅ 5-bit Sub-addressing |
-| | Register Read/Write | ✅ 4 x 32-bit Registers |
-| | Asynchronous Reset | ✅ `aresetn` (Active-Low) |
-| **Verification** | Methodology | ✅ ABV + Directed Testbench |
-| | **Assertion-Based (ABV)** | ✅ **20 Immediate Assertions (Icarus Compatible)** |
-| | **Handshake Integrity** | ✅ **Logic verified under directed scenarios** |
-| | Simulation Logging | ✅ Timestamped (ns) with ERROR/INFO levels |
+| **Slave RTL** | SystemVerilog | 32-bit register-mapped AXI-Lite slave. |
+| **UVM Environment** | SystemVerilog | Modular & Reusable environment. |
+| **Assertions (ABV)** | SVA | Immediate & Concurrent checks for handshakes. |
+| **Stimulus** | CRV | Constrained-random sequences for address/data. |
 
-## 🚀 Verification (ABV & Directed TB)
+## 🚀 How to Run
+### 1. Web-based (Recommended)
+Dự án được tối ưu hóa cho **EDA Playground**. Cậu chủ chỉ cần copy folder `tb/uvm` lên và chọn simulator là **Synopsys VCS** hoặc **Aldec Riviera-PRO**.
 
-This project leverages 15+ SystemVerilog Assertions (SVA) to monitor protocol compliance. 
-
-### SVA/Immediate Property Categories
-The interface checkers (`axi4_lite_if.sv`) implement **20 specific protocol properties**:
-- **Handshake Stability (5 properties)**: Ensures `VALID` signals (AW, W, AR, R, B) stay high until `READY`.
-- **Signal Stability (5 properties)**: Payload (`ADDR`, `DATA`, `RESP`) must be stable during `VALID`.
-- **Response Legality (3 properties)**: Validates `BRESP`/`RRESP` values and `WSTRB` integrity.
-- **Reset Integrity (7 properties)**: Validates that all `VALID` signals stay low and states reset during `aresetn`.
-
-### EDA Tool Support & Compatibility
-> **Verification Note:**
-> The testbench utilizes 15+ **Immediate Assertions** to validate protocol integrity and handshake stability, ensuring full compatibility and execution on Icarus Verilog. Full *Concurrent SVA* blocks are also included in the source code (currently commented out) for seamless portability to commercial EDA tools (VCS/Questa).
-
-## Simulation & Results
-
-### Execution Log (Icarus Verilog)
-```text
-[@ 0 ns] [INFO] Starting AXI4-Lite Slave Verification...
-[@ 20 ns] [INFO] Reset Released.
-[@ 45 ns] [INFO] [TC_01] Write Handshake Successful: Addr=0x04, Data=0xDEADBEEF
-[@ 75 ns] [INFO] [TC_02] Read Handshake Successful: Addr=0x04, RData=0xdeadbeef
-[@ 75 ns] [INFO] [TC_03] Data Integrity Check: PASSED
-[@ 125 ns] [INFO] Simulation Finished.
-```
-
-## Known Gaps & Limitations
-- **Directed Stimulus**: The current testbench uses directed test cases. Transitioning to Constrained Random (Phase 2).
-- **Concurrent SVA**: Full concurrent checking is tool-dependent (optimized for VCS/Xcelium).
-- **Read/Write Collisions**: Handlers for simultaneous read/write to the same register bank are currently simplified.
-
-## Roadmap
-- **Phase 1 (Done)**: RTL + ABV + Directed TB + Async Reset.
-- **Phase 2 (Planned)**: Full UVM 1.2 Environment implementation (Agent, Scoreboard, and Sequences).
-- **Phase 3**: Multi-master/Multi-slave Interconnect validation.
-
-## Usage
+### 2. Local Flow (Open Source)
+Sử dụng **Icarus Verilog**:
 ```bash
-make sim   # Run verification log
-make waves # View waveforms (GTKWave)
+# Biên dịch và chạy
+iverilog -g2012 -o sim.out rtl/axi4_lite_slave.sv tb/uvm/tb_top.sv
+vvp sim.out
 ```
 
-## License
-MIT
+---
+*Phát triển bởi Bì Duy Tân — Sẵn sàng cho các dự án SoC phức tạp.*
