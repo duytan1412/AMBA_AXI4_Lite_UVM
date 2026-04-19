@@ -91,4 +91,4 @@ vcs -sverilog -ntb_opts uvm -f filelist.f -R
 
 > [!NOTE]
 > This project was developed as a portfolio piece to demonstrate fundamental understanding of professional silicon-verification standards.
-> **Developed by: Bì Duy Tân** (Design Verification Enthusiast).
+> **Developed by: Bì Duy Tân** (Junior Verification Engineer).
