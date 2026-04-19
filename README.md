@@ -21,7 +21,7 @@ graph TD
     Agent --> Monitor[Monitor]
     Driver --> IF[AXI4-Lite IF + SVA]
     Monitor --> IF
-    IF <-> DUT[AXI4-Lite Slave RTL]
+    IF <--> DUT[AXI4-Lite Slave RTL]
 ```
 
 ## 🛠️ Components Table
