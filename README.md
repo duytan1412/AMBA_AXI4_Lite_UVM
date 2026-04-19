@@ -23,31 +23,33 @@ This environment is built with **Separation of Concerns (SoC)** and **Scalabilit
 
 ```mermaid
 graph TD
-    subgraph UVM_Testbench
-        Test[UVM Test Library] --> Env[UVM Environment]
-        Env --> Agent[AXI4-Lite Agent]
-        Env --> SB[Scoreboard]
-        Env --> Cov[Functional Coverage]
+    subgraph TB ["UVM Testbench"]
+        Test["UVM Test Library"] --> Env["UVM Environment"]
+        Env --> Agent["AXI4-Lite Agent"]
+        Env --> SB["Scoreboard"]
+        Env --> Cov["Functional Coverage"]
         
-        Agent --> SQr[Sequencer]
-        Agent --> Drv[Driver]
-        Agent --> Mon[Monitor]
+        Agent --> SQr["Sequencer"]
+        Agent --> Drv["Driver"]
+        Agent --> Mon["Monitor"]
         
-        Mon -- Transaction --o SB
-        Mon -- Transaction --o Cov
+        Mon --> SB
+        Mon --> Cov
     end
 
-    subgraph Hardware_Interface
-        IF[AXI4-Lite Interface + SVA]
+    subgraph HI ["Hardware Interface"]
+        IF["AXI4-Lite Interface + SVA"]
     end
 
-    subgraph RTL_Design
-        DUT[AXI4-Lite Slave IP]
+    subgraph RTL ["RTL Design"]
+        DUT["AXI4-Lite Slave IP"]
     end
 
-    Drv <--> IF
-    Mon <-- IF
-    IF <--> DUT
+    Drv --> IF
+    IF --> Drv
+    Mon --> IF
+    IF --> DUT
+    DUT --> IF
 ```
 
 ---
