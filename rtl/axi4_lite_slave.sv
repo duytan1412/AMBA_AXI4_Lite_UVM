@@ -117,6 +117,10 @@ module axi4_lite_slave #(
         end
     end
 
+    // Address Decoding Error detection
+    logic addr_decode_err;
+    assign addr_decode_err = (awaddr_reg[ADDR_WIDTH-1:4] != 0) || (araddr_reg[ADDR_WIDTH-1:4] != 0);
+
     // Generation of B-Response
     always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
@@ -125,7 +129,8 @@ module axi4_lite_slave #(
         end else begin
             if (slv_reg_wren && ~s_axi_bvalid) begin
                 s_axi_bvalid <= 1'b1;
-                s_axi_bresp  <= RESP_OKAY; // Always OKAY for valid 4 registers range
+                // Return SLVERR if address is out of range (beyond 4 registers)
+                s_axi_bresp  <= (awaddr_reg[3:2] > 2'h3 || awaddr_reg[ADDR_WIDTH-1:4] != 0) ? RESP_SLVERR : RESP_OKAY;
             end else if (s_axi_bready && s_axi_bvalid) begin
                 s_axi_bvalid <= 1'b0;
             end
@@ -155,14 +160,17 @@ module axi4_lite_slave #(
 
     // Read Data output multiplexer
     logic [DATA_WIDTH-1:0] reg_data_out;
+    logic [1:0] read_resp;
     always @(*) begin
         case (araddr_reg[3:2])
-            2'h0: reg_data_out = slv_reg0;
-            2'h1: reg_data_out = slv_reg1;
-            2'h2: reg_data_out = slv_reg2;
-            2'h3: reg_data_out = slv_reg3;
-            default: reg_data_out = '0; 
+            2'h0: begin reg_data_out = slv_reg0; read_resp = RESP_OKAY; end
+            2'h1: begin reg_data_out = slv_reg1; read_resp = RESP_OKAY; end
+            2'h2: begin reg_data_out = slv_reg2; read_resp = RESP_OKAY; end
+            2'h3: begin reg_data_out = slv_reg3; read_resp = RESP_OKAY; end
+            default: begin reg_data_out = '0; read_resp = RESP_SLVERR; end
         endcase
+        // Extra check for upper bits
+        if (araddr_reg[ADDR_WIDTH-1:4] != 0) read_resp = RESP_SLVERR;
     end
 
     // Generation of Read Valid and Read Response
@@ -174,7 +182,7 @@ module axi4_lite_slave #(
         end else begin
             if (slv_reg_rden) begin
                 s_axi_rvalid <= 1'b1;
-                s_axi_rresp  <= RESP_OKAY;
+                s_axi_rresp  <= read_resp;
                 s_axi_rdata  <= reg_data_out;
             end else if (s_axi_rready && s_axi_rvalid) begin
                 s_axi_rvalid <= 1'b0;

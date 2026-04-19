@@ -1,49 +1,92 @@
-# 🛡️ AMBA AXI4-Lite Slave Verification (UVM & ABV)
+# 🛡️ Professional AMBA AXI4-Lite Slave Verification Suite
+[![UVM](https://img.shields.io/badge/Methodology-UVM--1.2-blue)](https://accellera.org/downloads/standards/uvm)
+[![AXI4-Lite](https://img.shields.io/badge/Protocol-AMBA--AXI4--Lite-orange)](https://developer.arm.com/documentation/ihi0022/e/)
 
-Dự án này thực thi mô hình kiểm thử chuyên nghiệp cho **AXI4-Lite Slave** bằng cách kết hợp giữa **UVM (Universal Verification Methodology)** và **ABV (Assertion-Based Verification)**.
+A high-end, industry-standard verification environment for an **AXI4-Lite Slave** IP. This portfolio-ready project demonstrates the integration of **Universal Verification Methodology (UVM)**, **Assertion-Based Verification (ABV)**, and **Functional Coverage (FCov)**.
 
-## 🌟 Key Highlights
-*   **Full UVM Architecture**: Bao gồm Agent, Driver, Monitor, Sequencer, Scoreboard và Environment.
-*   **Dual-Layer Verification**: 
-    *   **ABV**: 15+ SystemVerilog Assertions (SVA) bắt lỗi Protocol ngay lập tức.
-    *   **UVM Scoreboard**: Kiểm tra Data Integrity bằng Associative Array (Sparse Memory).
-*   **CRV (Constrained-Random Verification)**: Tự động hóa việc tạo test case ngẫu nhiên có ràng buộc để bao phủ các Corner Case.
+---
 
-## 🏗️ Verification Environment
+## 🚀 Architectural Highlights
+
+This environment is built with **Separation of Concerns (SoC)** and **Scalability** in mind:
+
+*   **Complete UVM UVC**: Robust Agent-based architecture (Driver, Monitor, Sequencer).
+*   **Dual-Layer Verification Strategy**:
+    *   **Dynamic (UVM)**: Scoreboard-driven data integrity checks using associative arrays (Sparse Memory).
+    *   **Static (ABV)**: 15+ SystemVerilog Assertions (SVA) for cycle-accurate protocol compliance.
+*   **Functional Coverage (FCov)**: Comprehensive coverage models tracking Address Spaces, Byte Strobes, and AXI Response codes (OKAY vs SLVERR).
+*   **CRV (Constrained-Random Verification)**: Advanced transaction randomization with soft constraints for flexible error injection.
+
+---
+
+## 🏗️ Verification Environment Architecture
 
 ```mermaid
 graph TD
-    Test[UVM Test] --> Env[UVM Env]
-    Env --> Agent[UVM Agent]
-    Env --> Scoreboard[Scoreboard]
-    Agent --> Sequencer[Sequencer]
-    Agent --> Driver[Driver]
-    Agent --> Monitor[Monitor]
-    Driver --> IF[AXI4-Lite IF + SVA]
-    Monitor --> IF
-    IF <--> DUT[AXI4-Lite Slave RTL]
-```
+    subgraph UVM_Testbench
+        Test[UVM Test Library] --> Env[UVM Environment]
+        Env --> Agent[AXI4-Lite Agent]
+        Env --> SB[Scoreboard]
+        Env --> Cov[Functional Coverage]
+        
+        Agent --> SQr[Sequencer]
+        Agent --> Drv[Driver]
+        Agent --> Mon[Monitor]
+        
+        Mon -- Transaction --o SB
+        Mon -- Transaction --o Cov
+    end
 
-## 🛠️ Components Table
+    subgraph Hardware_Interface
+        IF[AXI4-Lite Interface + SVA]
+    end
 
-| Component | Technology | Description |
-| :--- | :--- | :--- |
-| **Slave RTL** | SystemVerilog | 32-bit register-mapped AXI-Lite slave. |
-| **UVM Environment** | SystemVerilog | Modular & Reusable environment. |
-| **Assertions (ABV)** | SVA | Immediate & Concurrent checks for handshakes. |
-| **Stimulus** | CRV | Constrained-random sequences for address/data. |
+    subgraph RTL_Design
+        DUT[AXI4-Lite Slave IP]
+    end
 
-## 🚀 How to Run
-### 1. Web-based (Recommended)
-Dự án được tối ưu hóa cho **EDA Playground**. Cậu chủ chỉ cần copy folder `tb/uvm` lên và chọn simulator là **Synopsys VCS** hoặc **Aldec Riviera-PRO**.
-
-### 2. Local Flow (Open Source)
-Sử dụng **Icarus Verilog**:
-```bash
-# Biên dịch và chạy
-iverilog -g2012 -o sim.out rtl/axi4_lite_slave.sv tb/uvm/tb_top.sv
-vvp sim.out
+    Drv <--> IF
+    Mon <-- IF
+    IF <--> DUT
 ```
 
 ---
-*Phát triển bởi Bì Duy Tân — Sẵn sàng cho các dự án SoC phức tạp.*
+
+## 📊 Verification Matrix (Test Plan)
+
+| Test ID | Objective | Stimulus Type | Success Criteria |
+| :--- | :--- | :--- | :--- |
+| **base_test** | Verify basic R/W handshakes. | Randomized (Aligned) | 0 Scoreboard Errors. |
+| **axi_error_test** | Verify SLVERR response on invalid address. | Targeted (Out-of-range) | `resp == 2'b10`. |
+| **axi_burst_like_test**| Check pipeline stability with back-to-back reqs. | Randomized (No Delay) | No Protocol Violations. |
+| **coverage_check** | Reach 100% Functional Coverage goals. | Random + Targeted | All bins covered. |
+
+---
+
+## 🎯 Functional Coverage Goals
+
+The environment tracks the following metrics to ensure verification closure:
+1.  **Address Space**: Coverage for all 4 register offsets and out-of-range boundaries.
+2.  **Strobe Patterns**: Verification of partial word writes via `WSTRB`.
+3.  **Response Codes**: Ensuring the Slave reacts correctly with `OKAY` and `SLVERR` under specific conditions.
+4.  **Cross Coverage**: Ensuring every operation type (Read/Write) has been tested with every possible response code.
+
+---
+
+## 🛠️ Simulation & Deployment
+
+### Toolchain Support
+*   **Industry Standard**: Optimized for **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
+*   **Web-based Analysis**: Fully compatible with [EDA Playground](https://edaplayground.com/).
+
+### Execution Flow
+```bash
+# Example command for localized simulation (VCS)
+vcs -sverilog -ntb_opts uvm -f filelist.f -R
+```
+
+---
+
+> [!NOTE]
+> This project has been audited and upgraded to meet professional silicon-verification standards.
+> **Developed by: Bì Duy Tân** (Silicon Verification Specialist).
