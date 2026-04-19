@@ -75,6 +75,18 @@ The environment tracks the following metrics to ensure verification closure:
 
 ---
 
+## 📽️ Visual Verification Results
+
+### AXI4-Lite Read/Write Waveform
+![Waveform Annotated](docs/waveform_annotated.png)
+*Detailed view of address, data, and strobe signals during a transaction.*
+
+### Protocol Handshake Analysis
+![AXI Handshake](docs/axi_handshake.png)
+*VALID/READY handshake mechanism verification.*
+
+---
+
 ## 🛠️ Simulation & Deployment
 
 ### Toolchain Support
