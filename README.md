@@ -1,8 +1,8 @@
-# 🛡️ Professional AMBA AXI4-Lite Slave Verification Suite
+# 🛡️ AMBA AXI4-Lite Slave UVM Verification Portfolio
 [![UVM](https://img.shields.io/badge/Methodology-UVM--1.2-blue)](https://accellera.org/downloads/standards/uvm)
 [![AXI4-Lite](https://img.shields.io/badge/Protocol-AMBA--AXI4--Lite-orange)](https://developer.arm.com/documentation/ihi0022/e/)
 
-A high-end, industry-standard verification environment for an **AXI4-Lite Slave** IP. This portfolio-ready project demonstrates the integration of **Universal Verification Methodology (UVM)**, **Assertion-Based Verification (ABV)**, and **Functional Coverage (FCov)**.
+A comprehensive **UVM-based verification project** for an **AXI4-Lite Slave** IP. This portfolio project demonstrates the implementation of **Universal Verification Methodology (UVM)**, **Assertion-Based Verification (ABV)**, and **Functional Coverage (FCov)** principles.
 
 ---
 
@@ -78,7 +78,7 @@ The environment tracks the following metrics to ensure verification closure:
 ## 🛠️ Simulation & Deployment
 
 ### Toolchain Support
-*   **Industry Standard**: Optimized for **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
+*   **EDA Tools**: Designed to be compatible with industry-standard simulators such as **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
 *   **Web-based Analysis**: Fully compatible with [EDA Playground](https://edaplayground.com/).
 
 ### Execution Flow
@@ -90,5 +90,5 @@ vcs -sverilog -ntb_opts uvm -f filelist.f -R
 ---
 
 > [!NOTE]
-> This project has been audited and upgraded to meet professional silicon-verification standards.
-> **Developed by: Bì Duy Tân** (Silicon Verification Specialist).
+> This project was developed as a portfolio piece to demonstrate fundamental understanding of professional silicon-verification standards.
+> **Developed by: Bì Duy Tân** (Design Verification Enthusiast).
