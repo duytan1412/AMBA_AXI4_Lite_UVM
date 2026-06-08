@@ -2,7 +2,7 @@
 [![UVM](https://img.shields.io/badge/Methodology-UVM--1.2-blue)](https://accellera.org/downloads/standards/uvm)
 [![AXI4-Lite](https://img.shields.io/badge/Protocol-AMBA--AXI4--Lite-orange)](https://developer.arm.com/documentation/ihi0022/e/)
 
-A comprehensive UVM-based verification project for an AXI4-Lite Slave IP. This portfolio project demonstrates the implementation of Universal Verification Methodology (UVM), Assertion-Based Verification (ABV), and Functional Coverage (FCov) principles.
+A focused UVM-based verification project for an AXI4-Lite Slave IP. This portfolio project demonstrates the implementation of Universal Verification Methodology (UVM), Assertion-Based Verification (ABV), and Functional Coverage (FCov) principles.
 
 ---
 
@@ -10,11 +10,11 @@ A comprehensive UVM-based verification project for an AXI4-Lite Slave IP. This p
 
 This environment is built with Separation of Concerns (SoC) and Scalability in mind:
 
-*   Complete UVM UVC: Robust Agent-based architecture (Driver, Monitor, Sequencer).
+*   Complete UVM UVC: Agent-based architecture (Driver, Monitor, Sequencer).
 *   Dual-Layer Verification Strategy:
     *   Dynamic (UVM): Scoreboard-driven data integrity checks using associative arrays (Sparse Memory).
     *   Static (ABV): 15+ SystemVerilog Assertions (SVA) for cycle-accurate protocol compliance.
-*   Functional Coverage (FCov): Comprehensive coverage models tracking Address Spaces, Byte Strobes, and AXI Response codes (OKAY vs SLVERR).
+*   Functional Coverage (FCov): Coverage models tracking address spaces, byte strobes, and AXI response codes (OKAY vs SLVERR).
 *   CRV (Constrained-Random Verification): Advanced transaction randomization with soft constraints for flexible error injection.
 
 ---
@@ -61,7 +61,7 @@ graph TD
 | **base_test** | Verify basic R/W handshakes. | Randomized (Aligned) | 0 Scoreboard Errors. |
 | **axi_error_test** | Verify SLVERR response on invalid address. | Targeted (Out-of-range) | `resp == 2'b10`. |
 | **axi_burst_like_test**| Check pipeline stability with back-to-back reqs. | Randomized (No Delay) | No Protocol Violations. |
-| **coverage_check** | Reach 100% Functional Coverage goals. | Random + Targeted | All bins covered. |
+| **coverage_check** | Track functional coverage goals. | Random + Targeted | Key bins covered and documented. |
 
 See [PORTFOLIO.md](./PORTFOLIO.md) for the scholarship-focused evidence map and test-plan summary.
 
@@ -98,7 +98,7 @@ To ensure protocol compliance and reliability, the environment targets 100% func
 ## Simulation and Deployment
 
 ### Toolchain Support
-*   **EDA Tools**: Designed to be compatible with industry-standard simulators such as **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
+*   **EDA Tools**: Written for portability across common SystemVerilog/UVM simulators such as **Synopsys VCS**, **Cadence Xcelium**, and **Siemens Questa**.
 *   **Web-based Analysis**: Fully compatible with [EDA Playground](https://edaplayground.com/).
 
 ### Execution Flow

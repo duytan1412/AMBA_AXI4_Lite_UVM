@@ -1,7 +1,7 @@
 # Scholarship Portfolio Summary
 
 ## IC Design Relevance
-This repository demonstrates a UVM-based verification environment for an AXI4-Lite slave IP. It is the strongest IC Design / Design Verification portfolio project in this set because it combines AMBA protocol knowledge, UVM components, SVA/immediate assertions, scoreboard checking, targeted coverage closure, and documented waveform evidence.
+This repository demonstrates a UVM-based verification environment for an AXI4-Lite slave IP. It is the lead IC Design / Design Verification portfolio project in this set because it combines AMBA protocol knowledge, UVM components, SVA/immediate assertions, scoreboard checking, targeted coverage closure, and documented waveform evidence.
 
 ## Verification Architecture
 - DUT: AXI4-Lite slave with memory-mapped registers.
