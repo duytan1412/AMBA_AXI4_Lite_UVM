@@ -28,11 +28,11 @@ graph TD
         Env --> Agent["AXI4-Lite Agent"]
         Env --> SB["Scoreboard"]
         Env --> Cov["Functional Coverage"]
-        
+
         Agent --> SQr["Sequencer"]
         Agent --> Drv["Driver"]
         Agent --> Mon["Monitor"]
-        
+
         Mon --> SB
         Mon --> Cov
     end
@@ -63,6 +63,8 @@ graph TD
 | **axi_burst_like_test**| Check pipeline stability with back-to-back reqs. | Randomized (No Delay) | No Protocol Violations. |
 | **coverage_check** | Reach 100% Functional Coverage goals. | Random + Targeted | All bins covered. |
 
+See [PORTFOLIO.md](./PORTFOLIO.md) for the scholarship-focused evidence map and test-plan summary.
+
 ---
 
 ## Functional Coverage and Verification Closure
@@ -74,9 +76,10 @@ To ensure protocol compliance and reliability, the environment targets 100% func
 4.  **Cross Coverage**: Ensuring every operation type (Read/Write) has been tested with every possible response code.
 
 > [!NOTE]
-> **Evidence**: The latest coverage metrics and SVA activation counts are documented in [sim_results/coverage_report.txt](./sim_results/coverage_report.txt).
-> - **Functional/Code Coverage**: 100%
+> **Evidence**: The targeted closure metrics and SVA activation counts are documented in [sim_results/coverage_report.txt](./sim_results/coverage_report.txt).
+> - **Targeted Functional/Code Coverage Closure**: 100%
 > - **Total SVA Activations**: 2,000+ without failures.
+> - **Regression Coverage Note**: `sim_results/simulation.log` includes the random/base run and notes additional targeted tests used to close specialized strobe and back-to-back bins.
 
 ---
 

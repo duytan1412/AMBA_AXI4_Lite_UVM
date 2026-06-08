@@ -38,10 +38,10 @@ class axi_error_seq extends uvm_sequence#(axi4_lite_transaction);
         // Send transaction to an out-of-range address (e.g., 0x100)
         req = axi4_lite_transaction::type_id::create("req");
         start_item(req);
-        if (!req.randomize() with { addr == 32'h0000_0100; }) 
+        if (!req.randomize() with { addr == 32'h0000_0100; })
             `uvm_error("SEQ", "Randomization failed")
         finish_item(req);
-        
+
         `uvm_info("SEQ", "Sent ERROR injection transaction to addr 0x100", UVM_LOW)
     endtask
 endclass
@@ -93,6 +93,55 @@ class axi_error_test extends base_test;
         err_seq = axi_error_seq::type_id::create("err_seq");
         `uvm_info("TEST", "Starting AXI4-Lite Error Response Test...", UVM_LOW)
         err_seq.start(env.agent.sequencer);
+        #100ns;
+        phase.drop_objection(this);
+    endtask
+endclass
+
+// Burst-like Sequence: Back-to-back operations to consecutive addresses
+class axi_burst_like_seq extends uvm_sequence#(axi4_lite_transaction);
+    `uvm_object_utils(axi_burst_like_seq)
+
+    function new(string name = "axi_burst_like_seq");
+        super.new(name);
+    endfunction
+
+    task body();
+        for (int i = 0; i < 4; i++) begin
+            req = axi4_lite_transaction::type_id::create("req");
+            start_item(req);
+            if (!req.randomize() with {
+                operation == axi4_lite_transaction::WRITE;
+                addr == i * 4;
+            }) `uvm_error("SEQ", "Randomization failed")
+            finish_item(req);
+        end
+        for (int i = 0; i < 4; i++) begin
+            req = axi4_lite_transaction::type_id::create("req");
+            start_item(req);
+            if (!req.randomize() with {
+                operation == axi4_lite_transaction::READ;
+                addr == i * 4;
+            }) `uvm_error("SEQ", "Randomization failed")
+            finish_item(req);
+        end
+    endtask
+endclass
+
+// Burst-like Test
+class axi_burst_like_test extends base_test;
+    `uvm_component_utils(axi_burst_like_test)
+
+    function new(string name = "axi_burst_like_test", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    task run_phase(uvm_phase phase);
+        axi_burst_like_seq bl_seq;
+        phase.raise_objection(this);
+        bl_seq = axi_burst_like_seq::type_id::create("bl_seq");
+        `uvm_info("TEST", "Starting AXI4-Lite Burst-Like Test...", UVM_LOW)
+        bl_seq.start(env.agent.sequencer);
         #100ns;
         phase.drop_objection(this);
     endtask

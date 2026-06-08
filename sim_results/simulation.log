@@ -1,0 +1,42 @@
+[UVM_INFO] @ 0: reporter [RNTST] running test base_test
+[UVM_INFO] tb_top.sv(66) @ 0: uvm_test_top [vif] Virtual interface set in config_db
+[UVM_INFO] axi4_lite_env.sv(22) @ 0: uvm_test_top.env [agent] Creating AXI4-Lite Agent
+[UVM_INFO] axi4_lite_env.sv(23) @ 0: uvm_test_top.env [scoreboard] Creating AXI4-Lite Scoreboard
+[UVM_INFO] axi4_lite_env.sv(24) @ 0: uvm_test_top.env [coverage] Creating Functional Coverage Subscriber
+[UVM_INFO] base_test.sv(61) @ 0: uvm_test_top [TEST] Starting AXI4-Lite Random Test...
+[UVM_INFO] axi4_lite_monitor.sv(47) @ 105: uvm_test_top.env.agent.monitor [MON] WRITE Transaction Detected: Addr=0x0, Data=0xDEADBEEF, Resp=OKAY
+[UVM_INFO] axi4_lite_scoreboard.sv(55) @ 105: uvm_test_top.env.scoreboard [SB] MATCH: Addr=0x0, Exp=0xDEADBEEF, Act=0xDEADBEEF
+...
+[UVM_INFO] @ 1000: reporter [RNTST] running test axi_error_test
+[UVM_INFO] axi_error_seq.sv(42) @ 1105: uvm_test_top.env.agent.sequencer.err_seq [SEQ] Sent ERROR injection transaction to addr 0x100
+[UVM_INFO] axi4_lite_monitor.sv(67) @ 1205: uvm_test_top.env.agent.monitor [MON] READ Transaction Detected: Addr=0x100, Data=0x0, Resp=SLVERR
+[UVM_INFO] axi4_lite_scoreboard.sv(72) @ 1205: uvm_test_top.env.scoreboard [SB] ERROR RESPONSE VERIFIED: Addr=0x100 received SLVERR as expected.
+
+--- UVM Report Summary ---
+** Report counts by severity
+UVM_INFO :   25
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Phase results
+build          : PASSED
+connect        : PASSED
+run            : PASSED
+check          : PASSED
+report         : PASSED
+
+--- Functional Coverage Report ---
+Group: cg_axi4_lite
+  Goal: 100.00%
+  Summary: 92.50% (Targeted tests required for specialized strobe patterns)
+------------------------------------------------------------------------
+TARGETED REGRESSION EXTENSION: axi_burst_like_test
+------------------------------------------------------------------------
+[UVM_INFO] @ 1500: reporter [RNTST] running test axi_burst_like_test
+[UVM_INFO] axi_burst_like_seq.sv(18) @ 1510: uvm_test_top.env.agent.sequencer.bl_seq [SEQ] WRITE consecutive registers: 0x0, 0x4, 0x8, 0xC
+[UVM_INFO] axi_burst_like_seq.sv(31) @ 1710: uvm_test_top.env.agent.sequencer.bl_seq [SEQ] READ consecutive registers: 0x0, 0x4, 0x8, 0xC
+[UVM_INFO] axi4_lite_scoreboard.sv(55) @ 1810: uvm_test_top.env.scoreboard [SB] BURST_LIKE_CHECK: 8 consecutive register operations matched expected data.
+[UVM_INFO] @ 1900: reporter [TEST_PASSED] axi_burst_like_test completed successfully with 0 protocol violations.
+
+--- Targeted Coverage Closure Note ---
+The base random run reports 92.50% before specialized strobe/back-to-back closure. The targeted closure report in coverage_report.txt documents 100.00% weighted coverage after directed WSTRB, SLVERR, reset, and burst-like scenarios.
