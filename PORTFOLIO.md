@@ -1,7 +1,7 @@
 # Scholarship Portfolio Summary
 
 ## IC Design Relevance
-This repository demonstrates a UVM-based verification environment for an AXI4-Lite slave IP. It is the lead IC Design / Design Verification portfolio project in this set because it combines AMBA protocol knowledge, UVM components, SVA/immediate assertions, scoreboard checking, targeted coverage closure, and documented waveform evidence.
+This repository demonstrates a UVM-based verification environment for an AXI4-Lite slave IP. It is the lead IC Design / Design Verification portfolio project in this set because it combines AMBA protocol knowledge, UVM components, SVA/immediate assertions, scoreboard checking, coverage-model implementation, honest coverage-status reporting, and documented waveform evidence.
 
 ## Verification Architecture
 - DUT: AXI4-Lite slave with memory-mapped registers.
@@ -19,7 +19,7 @@ This repository demonstrates a UVM-based verification environment for an AXI4-Li
 | UVM test library | `tb/uvm/axi4_lite_test_lib.sv` |
 | Functional coverage subscriber | `tb/uvm/axi4_lite_coverage.sv` |
 | Simulation log | `sim_results/simulation.log` |
-| Coverage closure report | `sim_results/coverage_report.txt` |
+| Coverage model/status report | `sim_results/coverage_report.txt` |
 | Annotated waveform | `docs/waveform_annotated.png` |
 
 ## Test Plan Summary
@@ -28,7 +28,8 @@ This repository demonstrates a UVM-based verification environment for an AXI4-Li
 | `base_test` | Legal randomized read/write transactions | UVM log and scoreboard matches |
 | `axi_error_test` | Invalid address produces SLVERR | `sim_results/simulation.log` |
 | `axi_burst_like_test` | Consecutive register writes followed by reads | `tb/uvm/axi4_lite_test_lib.sv` and updated log evidence |
-| Coverage closure | Cover address, WSTRB, response, and handshake bins | `sim_results/coverage_report.txt` |
+| Coverage model/status | Cover address, WSTRB, response, and handshake bins without claiming numeric closure | `sim_results/coverage_report.txt` |
 
 ## Scholarship Positioning
-For Synopsys IC Design Scholarship review, lead with this repository. It maps cleanly to digital IC verification skills: UVM, SVA, AMBA AXI4-Lite, coverage-driven verification, waveform analysis, and protocol-debug thinking.
+For Synopsys IC Design Scholarship review, lead with this repository. It maps cleanly to digital IC verification skills: UVM, SVA, AMBA AXI4-Lite, coverage-driven thinking, waveform analysis, and protocol-debug thinking.
+

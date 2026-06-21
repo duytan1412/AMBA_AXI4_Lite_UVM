@@ -1,0 +1,13 @@
++incdir+tb/uvm
++incdir+tb/if
+rtl/axi4_lite_slave.sv
+tb/if/axi4_lite_if.sv
+tb/uvm/axi4_lite_transaction.sv
+tb/uvm/axi4_lite_driver.sv
+tb/uvm/axi4_lite_monitor.sv
+tb/uvm/axi4_lite_agent.sv
+tb/uvm/axi4_lite_scoreboard.sv
+tb/uvm/axi4_lite_coverage.sv
+tb/uvm/axi4_lite_env.sv
+tb/uvm/axi4_lite_test_lib.sv
+tb/uvm/tb_top.sv

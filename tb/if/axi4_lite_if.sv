@@ -41,8 +41,8 @@ interface axi4_lite_if #(
     // PROTOCOL CHECKS (AXI4-Lite Compliance)
     //---------------------------------------------------------
     
-    // Immediate Assertions for Icarus Verilog Compatibility
-    // Total: 15+ properties implemented across 5 channels and reset logic.
+    // Immediate protocol checks for Icarus Verilog compatibility.
+    // Concurrent SVA examples are kept below for commercial simulators.
     
     always @(posedge aclk) begin
         if (aresetn) begin

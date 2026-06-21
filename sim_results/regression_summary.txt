@@ -1,0 +1,16 @@
+# AXI4-Lite regression summary
+
+Date: archived portfolio evidence
+Simulator target: VCS/Xcelium/Questa UVM flow for full regression; Icarus Verilog for simple smoke simulation.
+
+| Test | Intent | Expected result | Evidence status |
+|---|---|---|---|
+| `base_test` | aligned read/write data integrity | 0 scoreboard errors | implemented |
+| `axi_error_test` | invalid address error handling | `SLVERR` observed | implemented |
+| `axi_burst_like_test` | back-to-back request stability | no SVA/protocol errors | implemented |
+| `simple_smoke` | open-source RTL sanity check | simulation completes | runnable through Makefile |
+
+## Limitations
+
+- This text file is a human-readable regression summary, not a simulator-generated coverage database.
+- Regenerate coverage with the target commercial simulator before claiming numerical closure.

@@ -1,0 +1,17 @@
+name: AXI4-Lite CI Smoke
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+      - name: Lint RTL and interface
+        run: make lint
+      - name: Run simple smoke simulation
+        run: make sim

@@ -65,8 +65,8 @@ module tb_top;
         // Set Interface in Config DB
         uvm_config_db#(virtual axi4_lite_if)::set(null, "*", "vif", intf);
         
-        // Start Test
-        run_test("base_test");
+        // Start Test. Use +UVM_TESTNAME=<test> to select a test; default is base_test.
+        run_test();
     end
 
     // Monitoring
@@ -76,3 +76,4 @@ module tb_top;
     end
 
 endmodule
+
