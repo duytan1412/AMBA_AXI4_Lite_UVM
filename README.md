@@ -17,6 +17,9 @@ Block-level verification project for an AMBA AXI4-Lite slave IP. The repo is int
 | Coverage summary | [`sim_results/coverage_report.txt`](./sim_results/coverage_report.txt) |
 | Waveform evidence | [`docs/waveform_annotated.png`](./docs/waveform_annotated.png) |
 
+## Waveform Preview
+
+![AXI4-Lite annotated waveform](./docs/waveform_annotated.png)
 ## What Is Implemented
 
 - UVM-style agent architecture: driver, monitor, sequencer, scoreboard, transaction, environment, and test library.
