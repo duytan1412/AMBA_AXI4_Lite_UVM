@@ -16,6 +16,9 @@ Block-level verification project for an AMBA AXI4-Lite slave IP. The repo is int
 | Regression summary | [`sim_results/regression_summary.txt`](./sim_results/regression_summary.txt) |
 | Coverage summary | [`sim_results/coverage_report.txt`](./sim_results/coverage_report.txt) |
 | Waveform evidence | [`docs/waveform_annotated.png`](./docs/waveform_annotated.png) |
+| Valid-ready SVA examples | [`docs/valid_ready_sva_examples.md`](./docs/valid_ready_sva_examples.md) |
+| Checker vs DUT bug note | [`docs/checker_vs_dut_bug_note.md`](./docs/checker_vs_dut_bug_note.md) |
+| Evidence policy | [`docs/evidence_policy.md`](./docs/evidence_policy.md) |
 
 ## Waveform Preview
 
