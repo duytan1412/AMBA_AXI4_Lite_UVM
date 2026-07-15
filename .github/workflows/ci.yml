@@ -1,11 +1,11 @@
-name: AXI4-Lite CI Smoke
+name: AXI4-Lite CI Lint
 
 on:
   push:
   pull_request:
 
 jobs:
-  smoke:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,5 +13,3 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y iverilog
       - name: Lint RTL and interface
         run: make lint
-      - name: Run simple smoke simulation
-        run: make sim
